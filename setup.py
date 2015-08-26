@@ -14,7 +14,7 @@ setup(
    description = ("Unified Controller for Virtual Clusters"),
    license = "GPLv3",
    keywords = "Virtual Cluster, Management",
-   url == "https://github.com/virtualclusters/unicon",
+   url = "https://github.com/virtualclusters/unicon",
    packages = ['unicon'],
    install_requires = reqs,
    long_description = read('README.md'),
