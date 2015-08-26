@@ -1,6 +1,14 @@
 import click
 
-@click.command("")
+@click.group()
+def cli():
+    pass
 
-def main():
-    print "hello"
+@cli.command('create')
+@click.argument('app')
+def create(app):
+    """Creates a new cluster"""
+    click.echo("%s cluster" % app)
+
+
+

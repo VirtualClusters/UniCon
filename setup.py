@@ -30,7 +30,7 @@ setup(
    py_modules=['unicon'],
    entry_points='''
       [console_scripts]
-      unicon=unicon.cmd:main
+      unicon=unicon.cmd:cli
       ''',
 )
    
