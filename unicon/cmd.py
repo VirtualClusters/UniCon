@@ -1,4 +1,5 @@
 import click
+import unicon.data as ud
 
 @click.group()
 def cli():
@@ -14,7 +15,7 @@ def create(name):
 @click.argument('name')
 def list(name):
     """Lists clusters"""
-    click.echo("mesos")
+    click.echo(ud.clusters())
     # list of clusters from yaml 
 
 
