@@ -14,18 +14,19 @@ def create(name):
 
 @cli.command('list')
 @click.argument('name', default='cluster')
-def list(name):
+def lists(name):
     """Lists clusters or resources"""
     if name == "cluster":
         # list of clusters from yaml 
-        dlist = list(enumerate(udata.clusters(), start=1))
+        ddict = dict(enumerate(udata.clusters(), start=1))
     elif name == "resource":
-        dlist = list(enumerate(udata.resources(), start=1))
+        ddict = dict(enumerate(udata.resources(), start=1))
     else:
         print ("Unexpected type")# %s" % name)
-        dlist=None
+        ddict = None
 
-    click.echo(dlist)
+    for num, val in dlist:
+        print ("{0}) {1}".format(num, val))
 
 @cli.command('register')
 @click.argument('name')
@@ -56,13 +57,20 @@ def register_resource(name):
         udata.write_resource(rname, "cert", cert)
 
 @cli.command('update')
-@click.argument('name')
-def update(name):
+@click.argument('rtype')
+def update(rtype):
     """Updates clusters or resources"""
-    if name == "cluster":
+    if rtype == "cluster":
         # list of clusters from yaml 
-        click.echo(udata.clusters())
-    elif name == "resource":
-        click.echo(udata.resources())
+        ddict = dict(enumerate(udata.clusters(), start=1))
+    elif rtype == "resource":
+        ddict = dict(enumerate(udata.resources(), start=1))
+    else:
+        print ("Unexpected type")# %s" % name)
+        ddict = None
 
+    for num, val in ddict.iteritems():
+        print ("{0}) {1}".format(num, val))
 
+    num = click.prompt("Choose to update", type=int)
+    click.edit(filename=udata.get_filepath(name=ddict[num], rtype=rtype)) 

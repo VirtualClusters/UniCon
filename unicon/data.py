@@ -2,19 +2,21 @@ import os
 from glob import glob
 import yaml
 
-BASE_DIR=os.path.expanduser("~") + "/.unicon"
+BASE_DIR = os.path.expanduser("~") + "/.unicon"
+RES_DIR = BASE_DIR + "/resource/"
+CLS_DIR = BASE_DIR + "/cluster/"
 
 def clusters():
     return list_clusters()
 
 def list_clusters():
-    return get_list_of_files(BASE_DIR + "/cluster/*.yaml")
+    return get_list_of_files(CLS_DIR + "/*.yaml")
 
 def resources():
     return list_resources()
 
 def list_resources():
-    return get_list_of_files(BASE_DIR + "/resource/*")
+    return get_list_of_files(RES_DIR + "/*")
 
 def get_list_of_files(path):
     res = glob(path)
@@ -26,7 +28,7 @@ def read(name):
     # READ FROM TEXT
 
 def read_cluster(name):
-    return read(BASE_DIR + "/cluster/" + name + ".yaml")
+    return read(CLS_DIR + name + ".yaml")
 
 def write(filepath, data):
     directory = os.path.dirname(filepath)
@@ -41,12 +43,20 @@ def write_resource(name, ftype, text):
     if ftype == "cred":
         filename = ".cred"
     elif ftype == "cert":
-        filename = name + ".pem"
+        filename = ".pem"
     else:
         print ("Unexpected type")
         raise
 
     # From BASE_DIR
-    filepath = (BASE_DIR + "/resource/" + name + "/" + filename)
+    filepath = (RES_DIR + name + "/" + filename)
     write(filepath, text)
     os.chmod(filepath, 0600)
+
+def get_filepath(name, rtype):
+    if rtype == "cluster":
+        filepath = CLS_DIR + name + ".yaml"
+    elif rtype == "resource":
+        filepath = RES_DIR + name + "/.cred" 
+    return filepath
+
