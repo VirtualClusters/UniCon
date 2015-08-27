@@ -10,10 +10,10 @@ def cli():
 def create(name):
     """Creates a new cluster"""
     click.echo("%s cluster" % name)
+    click.echo(ud.read_cluster(name))
 
 @cli.command('list')
-@click.argument('name')
-def list(name):
+def list():
     """Lists clusters"""
     click.echo(ud.clusters())
     # list of clusters from yaml 
