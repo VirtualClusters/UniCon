@@ -1,5 +1,6 @@
 import os
-from setuptools import setup
+import glob
+from setuptools import setup, find_packages
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
@@ -32,5 +33,7 @@ setup(
       [console_scripts]
       unicon=unicon.cmd:cli
       ''',
-)
+   include_package_data = True,
+   data_files=[(os.path.expanduser("~") +
+       '/.unicon/cluster/', glob.glob('data/cluster/*.yaml'))],)
    
