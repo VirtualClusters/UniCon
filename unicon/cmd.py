@@ -1,5 +1,6 @@
 import click
 import unicon.data as udata
+from subprocess import call
 
 @click.group()
 def cli():
@@ -74,3 +75,24 @@ def update(rtype):
 
     num = click.prompt("Choose to update", type=int)
     click.edit(filename=udata.get_filepath(name=ddict[num], rtype=rtype)) 
+
+# HELPER FUNCTIONS FOR SYSTEM COMMANDS
+#
+@cli.command('ls')
+@click.argument('path', default="")
+def ls(path):
+    """ls .unicon directory"""
+    call(['ls', "-al", (udata.BASE_DIR + "/" + path)])
+
+@cli.command('nano')
+@click.argument('path', default="")
+def nano(path):
+    """nano .unicon directory"""
+    call(["nano", (udata.BASE_DIR + "/" + path)])
+
+@cli.command('cat')
+@click.argument('path', default="")
+def cat(path):
+    """cat .unicon directory"""
+    call(["cat", (udata.BASE_DIR + "/" + path)])
+
