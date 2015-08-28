@@ -1,1 +1,2 @@
 include data/cluster/*.yaml
+include data/*.yaml

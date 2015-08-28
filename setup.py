@@ -1,5 +1,5 @@
 import os
-import glob
+from glob import glob
 from setuptools import setup, find_packages
 
 def read(fname):
@@ -35,5 +35,6 @@ setup(
       ''',
    include_package_data = True,
    data_files=[(os.path.expanduser("~") +
-       '/.unicon/cluster/', glob.glob('data/cluster/*.yaml'))],)
+       '/.unicon/cluster/', glob('data/cluster/*.yaml')),
+       (os.path.expanduser("~") + '/.unicon/', glob('data/*.yaml'))],)
    

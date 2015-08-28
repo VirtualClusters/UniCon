@@ -6,16 +6,8 @@ BASE_DIR = os.path.expanduser("~") + "/.unicon"
 RES_DIR = BASE_DIR + "/resource/"
 CLS_DIR = BASE_DIR + "/cluster/"
 
-def clusters():
-    """Alias of list_clusters"""
-    return list_clusters()
-
 def list_clusters():
     return get_list_of_files(CLS_DIR + "/*.yaml")
-
-def resources():
-    """Alias of list_resources"""
-    return list_resources()
 
 def list_resources():
     return get_list_of_files(RES_DIR + "/*")
@@ -55,10 +47,30 @@ def write_resource(name, ftype, text):
     write(filepath, text)
     os.chmod(filepath, 0600)
 
+def read_resource(name=None):
+    if not name:
+        res = get_def_resource()
+
+def get_def_resource():
+    lres = list_resources()
+    conf = read_conf()
+
+def get_conf():
+    try:
+        return read(BASE_DIR + "/conf.yaml")
+    except IOError, e:
+        print ("No conf.yaml")
+
 def get_filepath(name, rtype):
     if rtype == "cluster":
         filepath = CLS_DIR + name + ".yaml"
     elif rtype == "resource":
         filepath = RES_DIR + name + "/.cred" 
     return filepath
+
+"""Alias"""
+clusters = list_clusters
+resources = list_resources
+read_conf = get_conf
+conf = get_conf
 
