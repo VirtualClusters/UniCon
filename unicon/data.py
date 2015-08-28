@@ -8,6 +8,9 @@ RES_DIR = BASE_DIR + "/resource/"
 CLS_DIR = BASE_DIR + "/cluster/"
 KEY_DIR = BASE_DIR + "/key/"
 
+MAIN_CONF = BASE_DIR + "/conf.yaml"
+KEY_CONF = KEY_DIR + "keys.yaml"
+
 def list_clusters():
     return get_list_of_files(CLS_DIR + "/*.yaml")
 
@@ -17,6 +20,10 @@ def list_resources():
 def get_list_of_files(path):
     res = glob(path)
     return [os.path.splitext(os.path.basename(i))[0] for i in res]
+
+def list_keys():
+    # Remove duplications
+    return list(set(get_list_of_files(KEY_DIR + "/*")))
 
 def read(name):
     stream = file(name, 'r')
@@ -28,6 +35,9 @@ def read(name):
 
 def read_cluster(name):
     return read(CLS_DIR + name + ".yaml")
+
+def read_key_conf():
+    return read(KEY_CONF)
 
 def write(filepath, data):
     directory = os.path.dirname(filepath)
@@ -79,7 +89,7 @@ def set_def_resource(name):
     
 def get_conf():
     try:
-        return read(BASE_DIR + "/conf.yaml")
+        return read(MAIN_CONF)
     except IOError, e:
         print ("No conf.yaml")
         raise

@@ -32,10 +32,24 @@ def get_new_keyname():
     return (pub, pri)
 
 def list_keys():
-    pass
+    kflist = udata.list_keys() # Key File List
+    kconf = udata.read_key_conf()
+    return kconf
 
 def add_key(name, key):
     pass
 
 def delete_key(name, key):
     pass
+
+def set_default(name):
+    pass
+
+def get_default():
+    pass
+
+# ALIAS 
+default = get_default
+add = add_key
+delete = delete_key
+create = create_new_keypair
