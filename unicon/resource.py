@@ -15,7 +15,7 @@ def buy(count, name, resource=None):
         # SSH KEY 
         #USER DATA
         nova.servers.create(name = name, image = conf['os'], flavor =
-        conf['size'], min_count = count, userdata)
+        conf['size'], min_count = count, userdata = userdata)
     elif cred['TYPE'] == 'AWS':
         print ("TBD")
         pass

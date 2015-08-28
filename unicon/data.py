@@ -6,6 +6,7 @@ from unicon import util as uutil
 BASE_DIR = os.path.expanduser("~") + "/.unicon"
 RES_DIR = BASE_DIR + "/resource/"
 CLS_DIR = BASE_DIR + "/cluster/"
+KEY_DIR = BASE_DIR + "/key/"
 
 def list_clusters():
     return get_list_of_files(CLS_DIR + "/*.yaml")

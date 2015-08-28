@@ -37,5 +37,6 @@ setup(
    data_files=[(os.path.expanduser("~") +
        '/.unicon/cluster/', glob('data/cluster/*.yaml')),
        (os.path.expanduser("~") + '/.unicon/', glob('data/*.yaml')),
-       (os.path.expanduser("~") + '/.unicon/', glob('init/*'))],)
+       (os.path.expanduser("~") + '/.unicon/init/', glob('data/init/*')),
+       (os.path.expanduser("~") + '/.unicon/key/', glob('data/key/*'))],)
    

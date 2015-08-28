@@ -22,5 +22,4 @@ def configparser_no_header(filepath):
     return dict(cp.items('asection'))
 
 # ALIAS
-
 load_cred = configparser_no_header
