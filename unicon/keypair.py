@@ -3,10 +3,10 @@ import tempfile
 from os import chmod
 from Crypto.PublicKey import RSA
 from unicon import data as udata
+from unicon import util as uutil
 
 # Thanks to http://stackoverflow.com/a/22449476
 def create_new_keypair(name=None):
-
     if not name:
         public, private = get_new_keyname()
     else:
@@ -21,6 +21,9 @@ def create_new_keypair(name=None):
     with open(public, 'w') as content_file:
         content_file.write(pubkey.exportKey('OpenSSH'))
 
+    # ADD KEY TO CONF
+    add_key(name, pubkey.exportKey('OpenSSH'))
+
 def get_new_keyname():
     directory = udata.KEY_DIR
     if not os.path.exists(directory):
@@ -32,14 +35,21 @@ def get_new_keyname():
     return (pub, pri)
 
 def list_keys():
-    kflist = udata.list_keys() # Key File List
+    # kflist = udata.list_keys() # Key File List
     kconf = udata.read_key_conf()
     return kconf
 
-def add_key(name, key):
-    pass
+def add_key(name, keystring):
+    """Adds a key, returns updated key configuration"""
+    kconf = list_keys()
+    kconf['keys'][name] = keystring
+    kconf['keys'][name]['created'] = uutil.current_time()
+    if not kconf['default']:
+        kconf['default'] = name
 
-def delete_key(name, key):
+    udata.write_key_conf(kconf)
+
+def delete_key(name, keystring):
     pass
 
 def set_default(name):

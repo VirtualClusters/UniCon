@@ -1,4 +1,8 @@
 import ConfigParser
+import datetime
+import time
+
+TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 
 # Thanks to
 # http://stackoverflow.com/questions/2819696/parsing-properties-file-in-python/2819788#2819788
@@ -21,5 +25,12 @@ def configparser_no_header(filepath):
     cp.readfp(FakeSecHead(open(filepath)))
     return dict(cp.items('asection'))
 
+def current_time():
+    return str(datetime.datetime.now().strftime(TIME_FORMAT))
+
+def str_to_time(string, tformat=None):
+    if not tformat:
+        tformat = TIME_FORMAT
+    return time.strptime(string, tformat)
 # ALIAS
 load_cred = configparser_no_header

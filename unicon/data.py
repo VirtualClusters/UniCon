@@ -14,39 +14,15 @@ KEY_CONF = KEY_DIR + "keys.yaml"
 def list_clusters():
     return get_list_of_files(CLS_DIR + "/*.yaml")
 
+def read_cluster(name):
+    return read(CLS_DIR + name + ".yaml")
+
 def list_resources():
     return get_list_of_files(RES_DIR + "/*")
 
 def get_list_of_files(path):
     res = glob(path)
     return [os.path.splitext(os.path.basename(i))[0] for i in res]
-
-def list_keys():
-    # Remove duplications
-    return list(set(get_list_of_files(KEY_DIR + "/*")))
-
-def read(name):
-    stream = file(name, 'r')
-    ext = os.path.splitext(os.path.basename(name))[1] 
-    if ext in [ ".yaml", ".yml" ]:
-        return yaml.load(stream)
-    else:
-        return stream.read()
-
-def read_cluster(name):
-    return read(CLS_DIR + name + ".yaml")
-
-def read_key_conf():
-    return read(KEY_CONF)
-
-def write(filepath, data):
-    directory = os.path.dirname(filepath)
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-    f = open(filepath, 'w')
-    f.write(data)
-    f.write('\n')
-    f.close()
 
 def write_resource(name, ftype, text):
     if ftype == "cred":
@@ -86,7 +62,17 @@ def get_def_resource():
 
 def set_def_resource(name):
     print ("TBD")
-    
+ 
+def list_keys():
+    # Remove duplications
+    return list(set(get_list_of_files(KEY_DIR + "/*")))
+
+def read_key_conf():
+    return read(KEY_CONF)
+
+def write_key_conf(ycontent):
+    write(KEY_CONF, yaml.dump(content, default_flow_style=False))
+
 def get_conf():
     try:
         return read(MAIN_CONF)
@@ -94,6 +80,23 @@ def get_conf():
         print ("No conf.yaml")
         raise
 
+def read(name):
+    stream = file(name, 'r')
+    ext = os.path.splitext(os.path.basename(name))[1] 
+    if ext in [ ".yaml", ".yml" ]:
+        return yaml.load(stream)
+    else:
+        return stream.read()
+
+def write(filepath, data):
+    directory = os.path.dirname(filepath)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    f = open(filepath, 'w')
+    f.write(data)
+    f.write('\n')
+    f.close()
+   
 def get_filepath(name, rtype, fname=None):
     if rtype == "cluster":
         filepath = CLS_DIR + name + (fname or ".yaml")
