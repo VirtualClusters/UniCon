@@ -1,5 +1,6 @@
 import click
 import unicon.data as udata
+import unicon.resource as uresource
 from subprocess import call
 
 @click.group()
@@ -8,10 +9,19 @@ def cli():
 
 @cli.command('create')
 @click.argument('name')
-def create(name):
+@click.option('--count', default=1, help='Number of nodes')
+def create(name, count):
     """Creates a new cluster"""
     click.echo("%s cluster" % name)
-    click.echo(udata.read_cluster(name))
+    ud = udata.read_cluster(name)
+    ures = uresource.buy(count, name) # Allocate, launch, boot 
+    res = uresource.trans(ures, ud) # make it mine, configure, run scripts
+    # Provide acccess info
+    click.echo(res)
+
+@cli.command('ssh')
+def ssh():
+    pass
 
 @cli.command('list')
 @click.argument('name', default='cluster')
@@ -26,7 +36,7 @@ def lists(name):
         print ("Unexpected type")# %s" % name)
         ddict = None
 
-    for num, val in dlist:
+    for num, val in ddict.iteritems():
         print ("{0}) {1}".format(num, val))
 
 @cli.command('register')
@@ -42,6 +52,7 @@ def register(name):
 
 def register_resource(name):
     rtype = click.prompt("1) bare metal, 2) IaaS", type=int)
+    cert = None
     if rtype == 1:
         click.echo("Cobbler or PXE Boot will be configured (TBD)")
     elif rtype == 2:
@@ -55,7 +66,8 @@ def register_resource(name):
         rname = click.prompt("Resource name? (e.g. futuresystems," \
                 + "chameleon, AWS", type=str)
         udata.write_resource(rname, "cred", cred)
-        udata.write_resource(rname, "cert", cert)
+        if cert:
+            udata.write_resource(rname, "cert", cert)
 
 @cli.command('update')
 @click.argument('rtype')
@@ -85,13 +97,13 @@ def ls(path):
     call(['ls', "-al", (udata.BASE_DIR + "/" + path)])
 
 @cli.command('nano')
-@click.argument('path', default="")
+@click.argument('path')
 def nano(path):
     """nano .unicon directory"""
     call(["nano", (udata.BASE_DIR + "/" + path)])
 
 @cli.command('cat')
-@click.argument('path', default="")
+@click.argument('path')
 def cat(path):
     """cat .unicon directory"""
     call(["cat", (udata.BASE_DIR + "/" + path)])

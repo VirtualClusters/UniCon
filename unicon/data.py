@@ -7,12 +7,14 @@ RES_DIR = BASE_DIR + "/resource/"
 CLS_DIR = BASE_DIR + "/cluster/"
 
 def clusters():
+    """Alias of list_clusters"""
     return list_clusters()
 
 def list_clusters():
     return get_list_of_files(CLS_DIR + "/*.yaml")
 
 def resources():
+    """Alias of list_resources"""
     return list_resources()
 
 def list_resources():
