@@ -21,6 +21,7 @@ def create(name, count):
 
 @cli.command('ssh')
 def ssh():
+    """SSH into a machine (TBD)"""
     pass
 
 @cli.command('list')

@@ -1,6 +1,55 @@
+import os
 import unicon.data as udata
+from novaclient import client
 
 def buy(count, name, resource=None):
     """Allocate resources (VMs)"""
-    udata.get_resource()
+    res = udata.get_resource()
+    # Identify type of resources: AWS, openstack, etc
+    cred = _helper_to_convert(res)
+    if cred['TYPE'] == 'openstack':
+        nova = client.Client(cred['VERSION'], cred['USERNAME'], cred['PASSWORD'],
+                cred['PROJECT_ID'], cred['AUTH_URL'], cacert=cred['CACERT'])
 
+        nova.servers.create(name, image, flavor,min_count,userdata)
+    elif cred['TYPE'] == 'AWS':
+        print ("TBD")
+        pass
+    else:
+        print ("Unexpected type")
+
+
+
+def _helper_to_convert(resource):
+
+    res = {}
+    rtype = None
+    res_name = resource.keys()[0]
+
+    for k, v in resource[res_name].iteritems():
+        if k == "os_username":
+            res['USERNAME'] = v
+            rtype = "openstack"
+        elif k == "os_password":
+            res['PASSWORD'] = v
+            rtype = "openstack"
+        elif k == "os_tenant_name":
+            res['PROJECT_ID'] = v
+            rtype = "openstack"
+        elif k == "os_auth_url":
+            res['AUTH_URL'] = v
+            rtype = "openstack"
+        elif k == "os_cacert":
+            res['CACERT'] = os.path.expanduser(v)
+            rtype = "openstack"
+
+    if rtype == "openstack":
+        res['VERSION'] = 2 # DEFAULT, need to support 1.1
+    if not 'CACERT' in res:
+        res['CACERT'] = udata.get_cacert_path(res_name)
+    res['TYPE'] = rtype
+    return res
+
+"""Alias"""
+allocate = buy
+launch = buy
