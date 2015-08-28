@@ -36,5 +36,6 @@ setup(
    include_package_data = True,
    data_files=[(os.path.expanduser("~") +
        '/.unicon/cluster/', glob('data/cluster/*.yaml')),
-       (os.path.expanduser("~") + '/.unicon/', glob('data/*.yaml'))],)
+       (os.path.expanduser("~") + '/.unicon/', glob('data/*.yaml')),
+       (os.path.expanduser("~") + '/.unicon/', glob('init/*'))],)
    
