@@ -11,7 +11,11 @@ def buy(count, name, resource=None):
         nova = client.Client(cred['VERSION'], cred['USERNAME'], cred['PASSWORD'],
                 cred['PROJECT_ID'], cred['AUTH_URL'], cacert=cred['CACERT'])
 
-        nova.servers.create(name, image, flavor,min_count,userdata)
+        conf = udata.get_conf()
+        # SSH KEY 
+        #USER DATA
+        nova.servers.create(name = name, image = conf['os'], flavor =
+        conf['size'], min_count = count, userdata)
     elif cred['TYPE'] == 'AWS':
         print ("TBD")
         pass
