@@ -1,5 +1,7 @@
 import os
 import tempfile
+import base64
+import hashlib
 from os import chmod
 from Crypto.PublicKey import RSA
 from unicon import data as udata
@@ -18,11 +20,16 @@ def create_new_keypair(name=None):
         chmod(private, 0600)
         content_file.write(key.exportKey('PEM'))
     pubkey = key.publickey()
+    pubkey_str = pubkey.exportKey('OpenSSH')
     with open(public, 'w') as content_file:
-        content_file.write(pubkey.exportKey('OpenSSH'))
+        content_file.write(pubkey_str)
 
     # ADD KEY TO CONF
-    add_key(name, pubkey.exportKey('OpenSSH'))
+    if not add_key(name, pubkey.exportKey('OpenSSH')):
+        os.remove(public)
+        os.remove(private)
+        return False
+    print ("New key [{0}]: {1}".format(name, pubkey_str))
 
 def get_new_keyname():
     directory = udata.KEY_DIR
@@ -34,20 +41,39 @@ def get_new_keyname():
     pri = pub + ".pk"
     return (pub, pri)
 
-def list_keys():
-    # kflist = udata.list_keys() # Key File List
+def list_keys(return_type="str"):
+    kconf = get_conf()['keys']
+    result_str = []
+    for kname, kvar in kconf.iteritems():
+        key_print = fingerprint(kvar['public'])
+        created = kvar['created']
+        result_str.append("{0}: {1} ({2})".format(kname, key_print, created))
+        kconf[kname]['fingerprint'] = key_print 
+
+    if return_type == "str":
+        return result_str
+    return kconf
+
+def get_conf():
+    #kflist = udata.list_keys() # Key File List
     kconf = udata.read_key_conf()
     return kconf
 
 def add_key(name, keystring):
     """Adds a key, returns updated key configuration"""
     kconf = list_keys()
-    kconf['keys'][name] = keystring
+    if name in kconf['keys']:
+        print ("Key {0} exists, try other name".format(name))
+        return False
+    name = str(name)
+    kconf['keys'][name] = {}
+    kconf['keys'][name]['public'] = keystring
     kconf['keys'][name]['created'] = uutil.current_time()
     if not kconf['default']:
         kconf['default'] = name
 
     udata.write_key_conf(kconf)
+    return True
 
 def delete_key(name, keystring):
     pass
@@ -58,8 +84,15 @@ def set_default(name):
 def get_default():
     pass
 
+# Thanks to http://stackoverflow.com/a/6682934
+def fingerprint(keystr):
+    key = base64.b64decode(keystr.strip().split()[1].encode('ascii'))
+    fp_plain = hashlib.md5(key).hexdigest()
+    return ':'.join(a+b for a,b in zip(fp_plain[::2], fp_plain[1::2]))
+
 # ALIAS 
 default = get_default
 add = add_key
 delete = delete_key
 create = create_new_keypair
+thumbprint = fingerprint

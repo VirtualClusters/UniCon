@@ -1,6 +1,7 @@
 import click
 import unicon.data as udata
 import unicon.resource as uresource
+import unicon.keypair as ukey
 from subprocess import call
 
 @click.group()
@@ -33,9 +34,11 @@ def lists(name):
         ddict = dict(enumerate(udata.clusters(), start=1))
     elif name == "resource":
         ddict = dict(enumerate(udata.resources(), start=1))
+    elif name == "key":
+        ddict = dict(enumerate(ukey.list_keys(), start=1))
     else:
-        print ("Unexpected type")# %s" % name)
-        ddict = None
+        print ("Unexpected type: {0}".format(name))# %s" % name)
+        ddict = {}
 
     for num, val in ddict.iteritems():
         print ("{0}) {1}".format(num, val))
@@ -88,6 +91,12 @@ def update(rtype):
 
     num = click.prompt("Choose to update", type=int)
     click.edit(filename=udata.get_filepath(name=ddict[num], rtype=rtype)) 
+
+@cli.command('keygen')
+@click.argument('name', default=None)
+def keygen(name):
+    """Create a new ssh key"""
+    ukey.create_new_keypair(name)
 
 # HELPER FUNCTIONS FOR SYSTEM COMMANDS
 #

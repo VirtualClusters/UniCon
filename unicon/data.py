@@ -57,20 +57,20 @@ def get_def_resource():
     else:
         print ("no default resource, first available resource will be used %s "\
                 % lres[0])
-
     return lres[0]
 
 def set_def_resource(name):
     print ("TBD")
  
-def list_keys():
+def list_key_files():
     # Remove duplications
-    return list(set(get_list_of_files(KEY_DIR + "/*")))
+    return list(set(get_list_of_files(KEY_DIR + "/*")) -
+            set(get_list_of_files(KEY_DIR + "/*.yaml")))
 
 def read_key_conf():
     return read(KEY_CONF)
 
-def write_key_conf(ycontent):
+def write_key_conf(content):
     write(KEY_CONF, yaml.dump(content, default_flow_style=False))
 
 def get_conf():
