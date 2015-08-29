@@ -36,7 +36,7 @@ def get_new_keyname():
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-    tf = tempfile.NamedTemporaryFile(dir=directory)
+    tf = tempfile.NamedTemporaryFile(prefix="unicon-",dir=directory)
     pub = tf.name
     pri = pub + ".pk"
     return (pub, pri)

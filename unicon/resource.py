@@ -22,8 +22,6 @@ def buy(count, name, resource=None):
     else:
         print ("Unexpected type")
 
-
-
 def _helper_to_convert(resource):
 
     res = {}
