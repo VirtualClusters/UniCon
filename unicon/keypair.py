@@ -85,7 +85,7 @@ def delete_key(name):
     """Delete a key"""
     kconf = get_conf()
     if not name in kconf['keys']:
-        print ("Key {0} not exist. not deleted".format(name))
+        print ("{0} not found".format(name))
         return False
 
     public = udata.KEY_DIR + name
@@ -96,7 +96,11 @@ def delete_key(name):
  
     del kconf['keys'][name]
     if kconf['default'] == name:
-        kconf['default'] = ""
+        if len(kconf['keys']) == 0:
+            kconf['default'] = ""
+        else:
+            kconf['default'] = kconf['keys'].keys()[0]
+
     udata.write_key_conf(kconf)
     return True
 
