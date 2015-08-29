@@ -42,17 +42,23 @@ def get_new_keyname():
     return (pub, pri)
 
 def list_keys(return_type="str"):
-    kconf = get_conf()['keys']
+    kconf = get_conf()
+    kdict = kconf['keys']
+    dkey = kconf['default']
     result_str = []
-    for kname, kvar in kconf.iteritems():
+    for kname, kvar in kdict.iteritems():
+        if kname == dkey:
+            isdefault = " (default)"
+        else:
+            isdefault = ""
         key_print = fingerprint(kvar['public'])
         created = kvar['created']
-        result_str.append("{0}: {1} ({2})".format(kname, key_print, created))
-        kconf[kname]['fingerprint'] = key_print 
+        result_str.append("{0}{1}: {2} ({3})".format(kname, isdefault, key_print, created))
+        kdict[kname]['fingerprint'] = key_print 
 
     if return_type == "str":
         return result_str
-    return kconf
+    return kdict
 
 def get_conf():
     #kflist = udata.list_keys() # Key File List
@@ -76,13 +82,13 @@ def add_key(name, keystring):
     return True
 
 def delete_key(name, keystring):
-    pass
+    print ("TBD")
 
 def set_default(name):
-    pass
+    print ("TBD")
 
 def get_default():
-    pass
+    print ("TBD")
 
 # Thanks to http://stackoverflow.com/a/6682934
 def fingerprint(keystr):
