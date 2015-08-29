@@ -67,7 +67,7 @@ def get_conf():
 
 def add_key(name, keystring):
     """Adds a key, returns updated key configuration"""
-    kconf = list_keys()
+    kconf = get_conf()
     if name in kconf['keys']:
         print ("Key {0} exists, try other name".format(name))
         return False
@@ -81,8 +81,24 @@ def add_key(name, keystring):
     udata.write_key_conf(kconf)
     return True
 
-def delete_key(name, keystring):
-    print ("TBD")
+def delete_key(name):
+    """Delete a key"""
+    kconf = get_conf()
+    if not name in kconf['keys']:
+        print ("Key {0} not exist. not deleted".format(name))
+        return False
+
+    public = udata.KEY_DIR + name
+    private = udata.KEY_DIR + name + ".pk"
+
+    os.remove(public)
+    os.remove(private)
+ 
+    del kconf['keys'][name]
+    if kconf['default'] == name:
+        kconf['default'] = ""
+    udata.write_key_conf(kconf)
+    return True
 
 def set_default(name):
     print ("TBD")

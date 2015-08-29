@@ -95,9 +95,15 @@ def update(rtype):
 @cli.command('keygen')
 @click.argument('name', default=None)
 def keygen(name):
-    """Create a new ssh key"""
+    """Creates a new ssh key"""
     ukey.create_new_keypair(name)
 
+@cli.command('keydel')
+@click.argument('name')
+def keydel(name):
+    """Deletes a keypair"""
+    ukey.delete_key(name)
+    
 # HELPER FUNCTIONS FOR SYSTEM COMMANDS
 #
 @cli.command('ls')
