@@ -1,9 +1,11 @@
+import re
 import unicon.data as udata
 import unicon.keypair as ukey
+import unicon.util as uutil
 from novaclient import client
 from novaclient import exceptions as nova_exceptions
 
-def buy(cred, count, name):
+def buy(cred, count, name, user_cmds=None):
     nova = client.Client(cred['VERSION'], cred['USERNAME'],
             cred['PASSWORD'], cred['PROJECT_ID'], cred['AUTH_URL'],
             cacert=cred['CACERT'])
@@ -11,9 +13,12 @@ def buy(cred, count, name):
     conf = udata.get_conf()
     vm_size = nova.flavors.find(name=conf['size'])
     vm_image = nova.images.find(name=conf['os'])
-    userdata = udata.read_init(vm_image.name)
+    userdata = udata.read_userdata(vm_image.name)
+
     # SSH KEY 
     dkey = ukey.get_default()
+    userdata = inject_cmds(name=vm_image.name, cmds=user_cmds,
+            userdata=userdata, ssh_pub_key=dkey['public'])
     try:
         vm_key = nova.keypairs.find(fingerprint=dkey['fingerprint'])
     except nova_exceptions.NotFound, e:
@@ -34,4 +39,16 @@ def add_public_ip(nova, server):
     fip = nova.floating_ips.create(pool.name)
     res = server.add_floating_ip(fip.ip)
     return res
+
+def inject_cmds(**kargs):
+    """Injects commands to runcmd unit in cloud-config"""
+    # if re.match(r"^#cloud-config[\n]*coreos", userdata):
+        # THIS IS ABOUT COREOS
+        # https://coreos.com/os/docs/latest/cloud-config.html
+
+    discovery_token = uutil.discovery_etcd()
+    runcmd_string = "".join(kargs['cmds'])
+    ssh_pub_key = kargs['ssh_pub_key']
+    userdata % vars()
+    return userdata
 

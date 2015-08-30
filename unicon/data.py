@@ -46,11 +46,11 @@ def read_resource(name=None):
         if name in lres:
             res = uutil.load_cred(RES_DIR + name + "/.cred")
     if not res:
-        name = get_def_resource()
+        name = get_def_resource_name()
         res = uutil.load_cred(RES_DIR + name + "/.cred")
     return {name: res}
 
-def get_def_resource():
+def get_def_resource_name():
     lres = list_resources()
     conf = read_conf()
     if conf['resource'] in lres:
@@ -119,4 +119,5 @@ clusters = list_clusters
 resources = list_resources
 read_conf = get_conf
 conf = get_conf
-get_resource = read_resource
+get_resource_access_info = read_resource
+read_userdata = read_init

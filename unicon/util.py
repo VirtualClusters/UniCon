@@ -1,8 +1,10 @@
 import ConfigParser
 import datetime
 import time
+import urllib2
 
 TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
+DISCOVERY_ETCD_NEW = "http://discovery.etcd.io/new"
 
 # Thanks to
 # http://stackoverflow.com/questions/2819696/parsing-properties-file-in-python/2819788#2819788
@@ -32,5 +34,10 @@ def str_to_time(string, tformat=None):
     if not tformat:
         tformat = TIME_FORMAT
     return time.strptime(string, tformat)
+
+def discovery_etcd():
+    response = urllib2.urlopen(DISCOVERY_ETCD_NEW)
+    return response.read()
+
 # ALIAS
 load_cred = configparser_no_header
