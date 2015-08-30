@@ -1,6 +1,6 @@
 import os
 import unicon.data as udata
-from novaclient import client
+import unicon.openstack as uos
 
 def buy(count, name, resource=None):
     """Allocate resources (VMs)"""
@@ -8,20 +8,9 @@ def buy(count, name, resource=None):
     # Identify type of resources: AWS, openstack, etc
     cred = _helper_to_convert(res)
     if cred['TYPE'] == 'openstack':
-        nova = client.Client(cred['VERSION'], cred['USERNAME'], cred['PASSWORD'],
-                cred['PROJECT_ID'], cred['AUTH_URL'], cacert=cred['CACERT'])
-
-        conf = udata.get_conf()
-        vm_size = nova.flavors.find(name=conf['size'])
-        vm_image = nova.images.find(name=conf['os'])
-        userdata = udata.read_init(vm_image)
-        # SSH KEY 
-        #USER DATA
-        nova.servers.create(name = name, image = vm_image, flavor =
-        vm_size, min_count = count, userdata = userdata)
+        res = uos.buy(cred, count, name)
     elif cred['TYPE'] == 'AWS':
         print ("TBD")
-        pass
     else:
         print ("Unexpected type")
 

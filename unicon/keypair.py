@@ -82,7 +82,7 @@ def add_key(name, keystring):
     return True
 
 def delete_key(name):
-    """Delete a key"""
+    """Deletes a key"""
     kconf = get_conf()
     if not name in kconf['keys']:
         print ("{0} not found".format(name))
@@ -105,10 +105,25 @@ def delete_key(name):
     return True
 
 def set_default(name):
-    print ("TBD")
+    """Seta a default key"""
+    kconf = get_conf()
+    if not name in kconf['keys']:
+        print ("{0} not found".format(name))
+        return False
+
+    kconf['default'] = name
+    udata.write_key_conf(kconf)
+    return True
 
 def get_default():
-    print ("TBD")
+    """Gets a default key"""
+    kconf = get_conf()
+    dkey_name = kconf['default']
+    dkey_string = kconf['keys'][dkey_name]['public']
+    res = {"name": dkey_name,
+            "public": dkey_string,
+            "fingerprint": fingerprint(dkey_string) }
+    return res
 
 # Thanks to http://stackoverflow.com/a/6682934
 def fingerprint(keystr):
