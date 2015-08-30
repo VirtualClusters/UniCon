@@ -22,5 +22,16 @@ def buy(cred, count, name):
     ret = nova.servers.create(name = name, image = vm_image, flavor =
     vm_size, min_count = count, userdata = userdata, key_name=vm_key.name, meta=
     {"client": "unicon CLI"})
+    #ADD PUBLIC IP
+    instance = nova.servers.find(id=ret.id)
+    add_public_ip(nova, instance)
     return ret
+
+def add_public_ip(nova, server):
+    """Creates a floating ip from the pool, and associates with server"""
+    pools = nova.floating_ip_pools.list()
+    pool = pools[0]
+    fip = nova.floating_ips.create(pool.name)
+    res = server.add_floating_ip(fip.ip)
+    return res
 

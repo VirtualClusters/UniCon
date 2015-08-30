@@ -14,9 +14,9 @@ def cli():
 def create(name, count):
     """Creates a new cluster"""
     click.echo("%s cluster" % name)
-    ud = udata.read_cluster(name)
+    user_data = udata.read_cluster(name)
     ures = uresource.buy(count, name) # Allocate, launch, boot 
-    res = uresource.trans(ures, ud) # make it mine, configure, run scripts
+    res = uresource.trans(ures, user_data) # make it mine, configure, run scripts
     # Provide acccess info
     click.echo(res)
 
