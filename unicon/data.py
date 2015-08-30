@@ -7,6 +7,7 @@ BASE_DIR = os.path.expanduser("~") + "/.unicon"
 RES_DIR = BASE_DIR + "/resource/"
 CLS_DIR = BASE_DIR + "/cluster/"
 KEY_DIR = BASE_DIR + "/key/"
+INI_DIR = BASE_DIR + "/init/"
 
 MAIN_CONF = BASE_DIR + "/conf.yaml"
 KEY_CONF = KEY_DIR + "keys.yaml"
@@ -79,6 +80,12 @@ def get_conf():
     except IOError, e:
         print ("No conf.yaml")
         raise
+
+def list_inits():
+    return get_list_of_files(INI_DIR + "/*")
+
+def read_init(name):
+    return read(INI_DIR + name)
 
 def read(name):
     stream = file(name, 'r')

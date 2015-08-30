@@ -1,6 +1,6 @@
 resource: futuresystems
 cluster: mesos
 count: 1
-os: coreos
+os: CoreOS
 size: m1.small
 

@@ -12,9 +12,12 @@ def buy(count, name, resource=None):
                 cred['PROJECT_ID'], cred['AUTH_URL'], cacert=cred['CACERT'])
 
         conf = udata.get_conf()
+        vm_size = nova.flavors.find(name=conf['size'])
+        vm_image = conf['os']
+        userdata = udata.read_init(vm_image)
         # SSH KEY 
         #USER DATA
-        nova.servers.create(name = name, image = conf['os'], flavor =
+        nova.servers.create(name = name, image = vm_image, flavor =
         conf['size'], min_count = count, userdata = userdata)
     elif cred['TYPE'] == 'AWS':
         print ("TBD")
