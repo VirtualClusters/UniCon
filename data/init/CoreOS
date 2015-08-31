@@ -2,7 +2,7 @@
 
 coreos:
   etcd2:
-    discovery: https://discovery.etcd.io/%(discovery_token)s
+    discovery: %(discovery_token)s
     advertise-client-urls: http://$private_ipv4:2379,http://$private_ipv4:4001
     initial-advertise-peer-urls: http://$private_ipv4:2380
     # listen on both the official ports and the legacy ports
