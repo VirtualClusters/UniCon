@@ -36,8 +36,12 @@ def str_to_time(string, tformat=None):
     return time.strptime(string, tformat)
 
 def discovery_etcd():
-    response = urllib2.urlopen(DISCOVERY_ETCD_NEW)
-    return response.read()
+    try:
+        response = urllib2.urlopen(DISCOVERY_ETCD_NEW)
+        return response.read()
+    except urllib2.HTTPError, e:
+        print ("{0} is not responding ({1})".format(DISCOVERY_ETCD_NEW, e))
+        return ""
 
 # ALIAS
 load_cred = configparser_no_header

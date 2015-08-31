@@ -19,10 +19,10 @@ def create(name, count):
     ures.number_of_nodes(count)
     ures.cluster_name(name)
     ures.set_cluster_info(cinfo)
-    ures.allocate(name) # Allocate, launch, boot 
+    res = ures.allocate(name) # Allocate, launch, boot 
     ures.runcmd() # make it mine, configure, run scripts
     # Provide acccess info
-    click.echo(res)
+    click.echo(vars(res))
 
 @cli.command('ssh')
 def ssh():

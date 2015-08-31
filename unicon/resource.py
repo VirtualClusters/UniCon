@@ -27,10 +27,13 @@ class Resource(object):
         cred = self.cred
         if cred['TYPE'] == 'openstack':
             res = uos.buy(cred, count, name, self.cluster_info['commands'])
+            res = res['network'] # ['instance'] is removed. use it if necessary
         elif cred['TYPE'] == 'AWS':
             print ("TBD")
         else:
             print ("Unexpected type")
+
+        return res
 
     def set_user_data(self, udata):
         self.user_data = udata
