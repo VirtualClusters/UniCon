@@ -22,7 +22,6 @@ def buy(cred, count, name, user_cmds=None):
     dkey = ukey.get_default()
     userdata = inject_cmds(name=vm_image.name, cmds=user_cmds,
             userdata=userdata, ssh_pub_key=dkey['public'])
-    print userdata
     try:
         vm_key = nova.keypairs.find(fingerprint=dkey['fingerprint'])
     except nova_exceptions.NotFound, e:
@@ -57,7 +56,7 @@ def inject_cmds(**kargs):
         # https://coreos.com/os/docs/latest/cloud-config.html
 
     discovery_token = uutil.discovery_etcd()
-    runcmd_string = "".join(kargs['cmds'])
+    runcmd_string = "; ".join(kargs['cmds'])
     ssh_pub_key = kargs['ssh_pub_key']
     userdata = kargs['userdata'] % vars()
     return userdata
