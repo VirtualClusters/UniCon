@@ -57,6 +57,7 @@ def inject_cmds(**kargs):
 
     discovery_token = uutil.discovery_etcd()
     runcmd_string = "; ".join(kargs['cmds'])
+    runcmd_string = runcmd_string.replace("\"","\\\"")
     ssh_pub_key = kargs['ssh_pub_key']
     userdata = kargs['userdata'] % vars()
     return userdata
